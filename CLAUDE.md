@@ -54,6 +54,6 @@ diagonale Übergänge in Volt. Farben und Schriften sind die der App
 
 ```bash
 npx remotion render TriCoachRennen out/rennen-hoch-master.mp4 --scale=0.8 --crf=12 --muted
-npx remotion render TriCoachRennenBand out/rennen-band-master.mp4 --scale=0.6666667 --crf=12 --muted
+npx remotion render TriCoachRennenBand out/rennen-band-master.mp4 --crf=12 --muted   # volle Größe: --scale=2/3 ergibt 720,00004 und bricht ab
 scripts/ausliefern.sh ../Tri-Coach/frontend/src/auth/rennen   # MP4, WebM (AV1) und Standbild je Format
 ```

@@ -16,15 +16,18 @@ mkdir -p "$ziel"
 for format in hoch band; do
   master="out/rennen-$format-master.mp4"
   [ -s "$master" ] || { echo "$master fehlt — erst rendern." >&2; exit 1; }
+  # Das Band ist in 1920×1080 gerendert; am Telefon ist es kaum 430 px breit,
+  # 1280 reicht auch für dreifache Pixeldichte. Das Hochformat kommt fertig.
+  groesse=$([ "$format" = band ] && echo "scale=1280:720:flags=lanczos," || true)
   # Ein Schlüsselbild je Sekunde: Der Browser springt beim Wiederholen an den
   # Anfang, und kurze Abstände halten das billig.
-  ffmpeg -hide_banner -loglevel error -y -i "$master" -an \
+  ffmpeg -hide_banner -loglevel error -y -i "$master" -an -vf "${groesse}format=yuv420p" \
     -c:v libx264 -preset veryslow -crf 27 -profile:v high -pix_fmt yuv420p \
     -g 30 -movflags +faststart "$ziel/rennen-$format.mp4"
-  ffmpeg -hide_banner -loglevel error -y -i "$master" -an \
+  ffmpeg -hide_banner -loglevel error -y -i "$master" -an -vf "${groesse}format=yuv420p" \
     -c:v libsvtav1 -preset 3 -crf 40 -g 30 -pix_fmt yuv420p \
     "$ziel/rennen-$format.webm"
-  ffmpeg -hide_banner -loglevel error -y -i "$master" -frames:v 1 \
+  ffmpeg -hide_banner -loglevel error -y -i "$master" -frames:v 1 -vf "${groesse}null" \
     -c:v libwebp -quality 78 "$ziel/rennen-$format.webp"
 done
 ls -la "$ziel"

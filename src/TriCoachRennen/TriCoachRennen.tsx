@@ -64,10 +64,10 @@ export const TriCoachRennen: React.FC<Props> = ({ format }) => {
             datei="footage/rad.mp4"
             trimBefore={24}
             playbackRate={1}
-            fokus={{ hoch: "19% 50%", band: "50% 50%" }}
+            fokus={{ hoch: "21% 50%", band: "50% 50%" }}
             index={1}
             werte={RAD}
-            zoom={{ von: 1, bis: 1.4, ursprung: { hoch: "50% 52%", band: "33% 52%" } }}
+            zoom={{ von: 1, bis: 1.15, ursprung: { hoch: "50% 59%", band: "34% 59%" } }}
             versatz={24}
           />
         </TransitionSeries.Sequence>
@@ -112,10 +112,10 @@ export const TriCoachRennen: React.FC<Props> = ({ format }) => {
             datei="footage/rad.mp4"
             trimBefore={0}
             playbackRate={1}
-            fokus={{ hoch: "19% 50%", band: "50% 50%" }}
+            fokus={{ hoch: "21% 50%", band: "50% 50%" }}
             index={1}
             werte={RAD}
-            zoom={{ von: 1, bis: 1.4, ursprung: { hoch: "50% 52%", band: "33% 52%" } }}
+            zoom={{ von: 1, bis: 1.15, ursprung: { hoch: "50% 59%", band: "34% 59%" } }}
           />
         </TransitionSeries.Sequence>
       </TransitionSeries>
