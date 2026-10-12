@@ -34,3 +34,26 @@ npm run lint                                        # ESLint + TypeScript prüfe
 - Remotion kann seinen eigenen Chrome Headless Shell in der Sandbox nicht herunterladen. `remotion.config.ts` verwendet deshalb automatisch den vorinstallierten Playwright-Headless-Shell unter `/opt/pw-browsers` (oder `REMOTION_BROWSER_EXECUTABLE`, falls gesetzt).
 - Die Config gilt nur für die CLI. Bei Nutzung von `@remotion/renderer` (Node-API) muss `browserExecutable` explizit übergeben werden.
 - Google Fonts / externe URLs sind je nach Netzwerkrichtlinie evtl. nicht erreichbar – lokale Fonts/Assets in `public/` bevorzugen.
+
+## Komposition `TriCoachRennen` (Hintergrund der Tri-Coach-Anmeldung)
+
+Rad, Lauf und Schwimmen als Schleife von 18 s, ohne Ton, im Stil einer
+Sportübertragung: Titel, Rennwerte, Fortschritt Schwimmen | Rad | Lauf,
+diagonale Übergänge in Volt. Farben und Schriften sind die der App
+(`marke.ts`, Schriften unter `public/fonts/`).
+
+- Zwei Formate aus einer Komponente: `TriCoachRennen` (1080×1350, Markenhälfte
+  am Schreibtisch) und `TriCoachRennenBand` (1920×1080, Band über dem
+  Formular am Telefon). Die Einblendungen sitzen dort, wo die App nichts
+  darüberlegt — oben links steht ihr Logo, unten rechts ihr Pause-Knopf.
+- Die Schleife ist nahtlos: „Rad (Anschluss)" zeigt die Frames vor dem Anfang
+  von „Rad". Wer Längen ändert, rechnet die Summe im Kommentar nach.
+- Filmmaterial: `scripts/footage-laden.sh` (Pexels, siehe
+  `public/footage/QUELLEN.md`); die Clips stehen nicht im Repository.
+- Ausliefern an Tri-Coach (`frontend/src/auth/rennen/`):
+
+```bash
+npx remotion render TriCoachRennen out/rennen-hoch-master.mp4 --scale=0.8 --crf=12 --muted
+npx remotion render TriCoachRennenBand out/rennen-band-master.mp4 --scale=0.6666667 --crf=12 --muted
+scripts/ausliefern.sh ../Tri-Coach/frontend/src/auth/rennen   # MP4, WebM (AV1) und Standbild je Format
+```
