@@ -13,21 +13,18 @@ const pace = (sekunden: number) =>
 // Kurzdistanz gebracht, damit Strecke, Tempo und Zwischenzeit zusammenpassen.
 // Beim Einblenden läuft das Tempo hoch und die Pace herunter: schneller werden.
 const RAD: Rennwerte = {
-  groesse: "Tempo",
   wert: (t, a) => (a * (41.6 + 0.4 * Math.sin(t * 1.3))).toFixed(1).replace(".", ","),
   einheit: "km/h",
   zweit: "312 W · 94 U/min · km 27,8",
   split: 40 * 60 + 5,
 };
 const LAUF: Rennwerte = {
-  groesse: "Pace",
   wert: (t, a) => pace(300 - (300 - 218) * a + a * Math.round(Math.sin(t * 0.9))),
   einheit: "/km",
   zweit: "km 7,4 · 186 Schritte/min",
   split: 26 * 60 + 53,
 };
 const SCHWIMMEN: Rennwerte = {
-  groesse: "Pace",
   wert: (t, a) => pace(120 - (120 - 74) * a + a * Math.round(Math.sin(t * 0.9))),
   einheit: "/100 m",
   zweit: "1.150 m · Kraul · 34 Züge/min",
@@ -62,12 +59,11 @@ export const TriCoachRennen: React.FC<Props> = ({ format }) => {
           <Szene
             format={format}
             datei="footage/rad.mp4"
-            trimBefore={24}
+            trimBefore={1 * fps}
             playbackRate={1}
-            fokus={{ hoch: "50% 50%", band: "50% 50%" }}
+            fokus={{ hoch: "30% 50%", band: "50% 50%" }}
             index={1}
             werte={RAD}
-            zoom={{ von: 1, bis: 1.08, ursprung: { hoch: "50% 60%", band: "45% 60%" } }}
             versatz={24}
           />
         </TransitionSeries.Sequence>
@@ -105,17 +101,16 @@ export const TriCoachRennen: React.FC<Props> = ({ format }) => {
           presentation={diagonal()}
           timing={linearTiming({ durationInFrames: 24 })}
         />
-        {/* Gleiche Datei, Fokus und Kamerafahrt wie „Rad" — nur 24 Frames früher. */}
+        {/* Gleiche Datei, Rate und Fokus wie „Rad" — nur 24 Frames früher. */}
         <TransitionSeries.Sequence name="Rad (Anschluss)" durationInFrames={24} premountFor={fps}>
           <Szene
             format={format}
             datei="footage/rad.mp4"
-            trimBefore={0}
+            trimBefore={1 * fps - 24 * 1}
             playbackRate={1}
-            fokus={{ hoch: "50% 50%", band: "50% 50%" }}
+            fokus={{ hoch: "30% 50%", band: "50% 50%" }}
             index={1}
             werte={RAD}
-            zoom={{ von: 1, bis: 1.08, ursprung: { hoch: "50% 60%", band: "45% 60%" } }}
           />
         </TransitionSeries.Sequence>
       </TransitionSeries>

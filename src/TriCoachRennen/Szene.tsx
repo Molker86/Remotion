@@ -15,17 +15,6 @@ type Props = {
   readonly index: 0 | 1 | 2;
   readonly werte: Rennwerte;
   /**
-   * Kamerafahrt über die ganze Szene. Ohne Angabe ein langsames Herausfahren
-   * aus der Mitte; das Rad fährt stattdessen leicht auf das Feld zu, weil
-   * dort ein Schnitt mitten in der Szene liegt und ein Herausfahren ihn
-   * betonen würde.
-   */
-  readonly zoom?: {
-    readonly von: number;
-    readonly bis: number;
-    readonly ursprung: Readonly<Record<Format, string>>;
-  };
-  /**
    * Frames vom Beginn der Überblendung in diese Szene bis zum Beginn ihrer
    * Sequenz. Null, wo die Sequenz mit der Überblendung beginnt. Beim Rad
    * liegt die Überblendung in „Rad (Anschluss)" am Ende der Schleife, seine
@@ -42,7 +31,6 @@ export const Szene: React.FC<Props> = ({
   fokus,
   index,
   werte,
-  zoom = { von: 1.1, bis: 1.02, ursprung: { hoch: "50% 50%", band: "50% 50%" } },
   versatz = 0,
 }) => {
   const frame = useCurrentFrame();
@@ -66,9 +54,8 @@ export const Szene: React.FC<Props> = ({
           height: "100%",
           objectPosition: fokus[format],
           filter: "saturate(0.86) contrast(1.1) brightness(0.88)",
-          // Bewegung auch dort, wo die Kamera steht.
-          scale: interpolate(zeit, [0, SZENE_FRAMES], [zoom.von, zoom.bis]),
-          transformOrigin: zoom.ursprung[format],
+          // Langsames Heranfahren: Bewegung auch dort, wo die Kamera steht.
+          scale: interpolate(zeit, [0, SZENE_FRAMES], [1.1, 1.02]),
         }}
       />
       {/* Kühle Grundstimmung der Markenfläche: Tinte über allem, Blau von oben rechts. */}

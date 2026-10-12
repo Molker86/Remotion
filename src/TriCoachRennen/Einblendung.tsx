@@ -8,8 +8,6 @@ const DISZIPLINEN = ["Schwimmen", "Rad", "Lauf"] as const;
 export const SZENE_FRAMES = 204;
 
 export type Rennwerte = {
-  /** Steht über dem Wert, z. B. „Tempo". */
-  readonly groesse: string;
   /** Der Wert zur Zeit `t` (Sekunden), `anteil` zählt beim Einblenden von 0 auf 1. */
   readonly wert: (t: number, anteil: number) => string;
   readonly einheit: string;
@@ -26,6 +24,46 @@ type Props = {
   readonly zeit: number;
   readonly werte: Rennwerte;
 };
+
+/**
+ * Maße in Pixeln des jeweiligen Formats. Alles steht oben rechts: Oben links
+ * liegt in der App das Logo, darunter am Schreibtisch Überschrift und
+ * Vorteile, unten rechts der Pause-Knopf.
+ *
+ * Der Rand rechts ist breit, weil die App das Video mit `object-fit: cover`
+ * beschneidet. Die Markenhälfte am Schreibtisch ist bei 1024×768 schmaler als
+ * 4:5 (0,64) und verliert links und rechts je ein Zehntel; das Band am Telefon
+ * ist bei 390×260 schmaler als 16:9 (1,5) und verliert je 8 %. Im Hochformat
+ * endet der Block oberhalb der Überschrift der App, auch bei 768 px Höhe;
+ * im Band steht der Titel so tief, dass ein flaches Band (es zeigt nur die
+ * mittleren 60 % der Höhe) ihn noch trägt.
+ */
+const MASS = {
+  hoch: {
+    rand: 180,
+    leisteOben: 96,
+    leiste: 136,
+    ziffer: 18,
+    titelOben: 150,
+    titel: 116,
+    strich: { breite: 14, hoehe: 92 },
+    wert: 72,
+    einheit: 30,
+    zweit: 21,
+  },
+  band: {
+    rand: 240,
+    leisteOben: 96,
+    leiste: 190,
+    ziffer: 24,
+    titelOben: 280,
+    titel: 172,
+    strich: { breite: 20, hoehe: 136 },
+    wert: 112,
+    einheit: 48,
+    zweit: 0,
+  },
+} as const;
 
 const uhr = (s: number) => {
   const ganz = Math.floor(s);
@@ -45,7 +83,7 @@ const rein = Easing.bezier(0.7, 0, 0.84, 0);
  */
 export const Einblendung: React.FC<Props> = ({ format, index, zeit, werte }) => {
   const { fps } = useVideoConfig();
-  const hoch = format === "hoch";
+  const m = MASS[format];
   const ein = interpolate(zeit, [12, 36], [0, 1], {
     easing: raus,
     extrapolateLeft: "clamp",
@@ -63,45 +101,40 @@ export const Einblendung: React.FC<Props> = ({ format, index, zeit, werte }) => 
   });
   const sichtbar = ein * (1 - aus);
   const t = zeit / fps;
-  const titel = DISZIPLINEN[index].toUpperCase();
 
-  // Maße in Pixeln des jeweiligen Formats; das Band wird am Telefon auf ein
-  // Viertel verkleinert und braucht deshalb größere Schrift.
-  const rand = hoch ? 80 : 120;
-  const leiste = hoch ? 172 : 210;
-
+  // Nur Nummern über den Leisten: Welche Disziplin läuft, sagt der Titel
+  // darunter, und mit Namen wäre die Leiste für die schmale Markenhälfte zu breit.
   const fortschritt = (
     <div
       style={{
         position: "absolute",
-        top: hoch ? 104 : 96,
-        right: rand,
+        top: m.leisteOben,
+        right: m.rand,
         display: "flex",
-        gap: hoch ? 12 : 14,
+        gap: m.leiste / 12,
         opacity: interpolate(zeit, [0, 16], [0.4, 1], { extrapolateRight: "clamp" }),
       }}
     >
       {DISZIPLINEN.map((name, i) => {
         const fuellung = i < index ? 1 : i > index ? 0 : interpolate(zeit, [0, SZENE_FRAMES], [0, 1]);
         return (
-          <div key={name} style={{ width: leiste }}>
+          <div key={name} style={{ width: m.leiste }}>
             <div
               style={{
                 fontFamily: SCHRIFT.anzeige,
                 fontWeight: 700,
                 fontStretch: "80%",
-                fontSize: hoch ? 19 : 24,
+                fontSize: m.ziffer,
                 letterSpacing: "0.1em",
                 color: i === index ? FARBE.volt : `rgb(${FARBE.hellRgb} / 0.6)`,
-                marginBottom: 10,
-                whiteSpace: "nowrap",
+                marginBottom: m.ziffer / 2,
               }}
             >
-              {String(i + 1).padStart(2, "0")} {name.toUpperCase()}
+              {String(i + 1).padStart(2, "0")}
             </div>
             <div
               style={{
-                height: hoch ? 6 : 7,
+                height: m.ziffer / 3,
                 borderRadius: 999,
                 background: `rgb(${FARBE.hellRgb} / 0.22)`,
                 overflow: "hidden",
@@ -121,140 +154,9 @@ export const Einblendung: React.FC<Props> = ({ format, index, zeit, werte }) => 
     </div>
   );
 
-  // Der Titel wird von rechts nach links aufgezogen und schräg wieder eingezogen.
-  const titelBlock = (
-    <div
-      style={{
-        position: "absolute",
-        // Rechts oben in beiden Formaten: Links oben steht in der App das
-        // Logo, rechts unten der Pause-Knopf, und die Athleten laufen und
-        // fahren links oder in der Mitte. Im Band so tief, dass ein flaches
-        // Band (es zeigt nur die mittleren 60 %) den Titel noch trägt.
-        top: hoch ? 190 : 280,
-        right: rand,
-        alignItems: "flex-end",
-        display: "flex",
-        flexDirection: "column",
-      }}
-    >
-      <div style={{ position: "relative", display: "flex", alignItems: "center", gap: hoch ? 22 : 28 }}>
-        <div
-          style={{
-            width: hoch ? 16 : 20,
-            height: hoch ? 104 : 136,
-            background: FARBE.volt,
-            transform: `skewX(-14deg) scaleY(${sichtbar})`,
-          }}
-        />
-        <div
-          style={{
-            fontFamily: SCHRIFT.anzeige,
-            fontStyle: "italic",
-            fontWeight: 900,
-            fontStretch: "72%",
-            fontSize: hoch ? 132 : 172,
-            lineHeight: 0.9,
-            letterSpacing: "-0.01em",
-            color: FARBE.hell,
-            textShadow: `0 6px 40px rgb(${FARBE.inkRgb} / 0.55)`,
-            clipPath: `inset(-20% ${(1 - ein) * 100}% -20% ${aus * 100}%)`,
-            translate: `${(1 - ein) * 60 - aus * 60}px 0`,
-          }}
-        >
-          {titel}
-        </div>
-      </div>
-      {!hoch && (
-        <div
-          style={{
-            marginTop: 22,
-            display: "flex",
-            alignItems: "baseline",
-            gap: 16,
-            fontFamily: SCHRIFT.anzeige,
-            fontWeight: 800,
-            fontStretch: "78%",
-            color: FARBE.hell,
-            opacity: sichtbar,
-            translate: `0 ${(1 - ein) * 24}px`,
-            textShadow: `0 4px 30px rgb(${FARBE.inkRgb} / 0.6)`,
-          }}
-        >
-          <span style={{ fontSize: 112, fontVariantNumeric: "tabular-nums" }}>
-            {werte.wert(t, zaehlt)}
-          </span>
-          <span style={{ fontSize: 48, color: FARBE.volt }}>{werte.einheit}</span>
-        </div>
-      )}
-    </div>
-  );
-
-  // Die Rennwerte als Karte unten rechts, über dem Pause-Knopf der App.
-  const karte = hoch && (
-    <div
-      style={{
-        position: "absolute",
-        right: rand,
-        bottom: 170,
-        width: 470,
-        padding: "26px 34px 30px",
-        background: `linear-gradient(135deg, rgb(${FARBE.inkRgb} / 0.78), rgb(${FARBE.inkRgb} / 0.5))`,
-        borderTop: `5px solid ${FARBE.volt}`,
-        clipPath: "polygon(0 0, 100% 0, 100% calc(100% - 34px), calc(100% - 34px) 100%, 0 100%)",
-        opacity: sichtbar,
-        translate: `0 ${(1 - ein) * 40 + aus * 20}px`,
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          fontFamily: SCHRIFT.anzeige,
-          fontWeight: 700,
-          fontStretch: "80%",
-          fontSize: 22,
-          letterSpacing: "0.14em",
-        }}
-      >
-        <span style={{ color: FARBE.volt }}>{werte.groesse.toUpperCase()}</span>
-        <span style={{ color: FARBE.gedaempft, fontVariantNumeric: "tabular-nums" }}>
-          SPLIT {uhr(werte.split + t)}
-        </span>
-      </div>
-      <div
-        style={{
-          display: "flex",
-          alignItems: "baseline",
-          gap: 14,
-          marginTop: 8,
-          fontFamily: SCHRIFT.anzeige,
-          fontWeight: 800,
-          fontStretch: "78%",
-          color: FARBE.hell,
-        }}
-      >
-        <span style={{ fontSize: 96, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>
-          {werte.wert(t, zaehlt)}
-        </span>
-        <span style={{ fontSize: 40, color: FARBE.gedaempft }}>{werte.einheit}</span>
-      </div>
-      <div
-        style={{
-          marginTop: 12,
-          fontFamily: SCHRIFT.text,
-          fontWeight: 500,
-          fontSize: 26,
-          color: `rgb(${FARBE.hellRgb} / 0.72)`,
-        }}
-      >
-        {werte.zweit}
-      </div>
-    </div>
-  );
-
   return (
     <AbsoluteFill>
-      {!hoch && (
+      {format === "band" && (
         // Am Telefon fehlt der Schleier der Schreibtischfassung; die Schrift
         // braucht dort ihren eigenen Grund.
         <AbsoluteFill
@@ -264,8 +166,89 @@ export const Einblendung: React.FC<Props> = ({ format, index, zeit, werte }) => 
         />
       )}
       {fortschritt}
-      {titelBlock}
-      {karte}
+      <div
+        style={{
+          position: "absolute",
+          top: m.titelOben,
+          right: m.rand,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "flex-end",
+        }}
+      >
+        {/* Der Titel wird von rechts nach links aufgezogen und schräg wieder eingezogen. */}
+        <div style={{ display: "flex", alignItems: "center", gap: m.strich.breite * 1.5 }}>
+          <div
+            style={{
+              width: m.strich.breite,
+              height: m.strich.hoehe,
+              background: FARBE.volt,
+              transform: `skewX(-14deg) scaleY(${sichtbar})`,
+            }}
+          />
+          <div
+            style={{
+              fontFamily: SCHRIFT.anzeige,
+              fontStyle: "italic",
+              fontWeight: 900,
+              fontStretch: "72%",
+              fontSize: m.titel,
+              lineHeight: 0.9,
+              letterSpacing: "-0.01em",
+              color: FARBE.hell,
+              textShadow: `0 6px 40px rgb(${FARBE.inkRgb} / 0.55)`,
+              clipPath: `inset(-20% ${(1 - ein) * 100}% -20% ${aus * 100}%)`,
+              translate: `${(1 - ein) * 60 - aus * 60}px 0`,
+            }}
+          >
+            {DISZIPLINEN[index].toUpperCase()}
+          </div>
+        </div>
+        <div
+          style={{
+            marginTop: m.wert / 5,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "flex-end",
+            opacity: sichtbar,
+            translate: `0 ${(1 - ein) * 24}px`,
+            textShadow: `0 4px 30px rgb(${FARBE.inkRgb} / 0.6)`,
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "baseline",
+              gap: m.einheit / 3,
+              fontFamily: SCHRIFT.anzeige,
+              fontWeight: 800,
+              fontStretch: "78%",
+              lineHeight: 1,
+              color: FARBE.hell,
+            }}
+          >
+            <span style={{ fontSize: m.wert, fontVariantNumeric: "tabular-nums" }}>
+              {werte.wert(t, zaehlt)}
+            </span>
+            <span style={{ fontSize: m.einheit, color: FARBE.volt }}>{werte.einheit}</span>
+          </div>
+          {m.zweit > 0 && (
+            // Im Band reicht der eine Wert; dort ist für eine Zeile mehr kein Platz.
+            <div
+              style={{
+                marginTop: m.zweit / 2,
+                fontFamily: SCHRIFT.text,
+                fontWeight: 500,
+                fontSize: m.zweit,
+                fontVariantNumeric: "tabular-nums",
+                color: `rgb(${FARBE.hellRgb} / 0.72)`,
+              }}
+            >
+              SPLIT {uhr(werte.split + t)} · {werte.zweit}
+            </div>
+          )}
+        </div>
+      </div>
     </AbsoluteFill>
   );
 };

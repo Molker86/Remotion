@@ -44,8 +44,11 @@ diagonale Übergänge in Volt. Farben und Schriften sind die der App
 
 - Zwei Formate aus einer Komponente: `TriCoachRennen` (1080×1350, Markenhälfte
   am Schreibtisch) und `TriCoachRennenBand` (1920×1080, Band über dem
-  Formular am Telefon). Die Einblendungen sitzen dort, wo die App nichts
-  darüberlegt — oben links steht ihr Logo, unten rechts ihr Pause-Knopf.
+  Formular am Telefon). Die Einblendungen stehen kompakt oben rechts, wo die
+  App nichts darüberlegt — oben links steht ihr Logo, darunter Überschrift und
+  Vorteile, unten rechts ihr Pause-Knopf. Der breite rechte Rand ist Absicht:
+  Die App beschneidet das Video mit `object-fit: cover` (Maße und Gründe in
+  `Einblendung.tsx`, `MASS`).
 - Die Schleife ist nahtlos: „Rad (Anschluss)" zeigt die Frames vor dem Anfang
   von „Rad". Wer Längen ändert, rechnet die Summe im Kommentar nach.
 - Filmmaterial: `scripts/footage-laden.sh` (Pexels, siehe
