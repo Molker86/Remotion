@@ -126,11 +126,13 @@ export const Einblendung: React.FC<Props> = ({ format, index, zeit, werte }) => 
     <div
       style={{
         position: "absolute",
-        // Im Band unten links: Oben links steht in der App das Logo, unten
-        // rechts der Pause-Knopf, und ein flaches Band schneidet oben ab.
-        ...(hoch
-          ? { top: 190, right: rand, alignItems: "flex-end" }
-          : { top: 560, left: rand, alignItems: "flex-start" }),
+        // Rechts oben in beiden Formaten: Links oben steht in der App das
+        // Logo, rechts unten der Pause-Knopf, und die Athleten laufen und
+        // fahren links oder in der Mitte. Im Band so tief, dass ein flaches
+        // Band (es zeigt nur die mittleren 60 %) den Titel noch trägt.
+        top: hoch ? 190 : 280,
+        right: rand,
+        alignItems: "flex-end",
         display: "flex",
         flexDirection: "column",
       }}
@@ -165,8 +167,7 @@ export const Einblendung: React.FC<Props> = ({ format, index, zeit, werte }) => 
       {!hoch && (
         <div
           style={{
-            marginTop: 26,
-            marginLeft: 48,
+            marginTop: 22,
             display: "flex",
             alignItems: "baseline",
             gap: 16,
@@ -258,7 +259,7 @@ export const Einblendung: React.FC<Props> = ({ format, index, zeit, werte }) => 
         // braucht dort ihren eigenen Grund.
         <AbsoluteFill
           style={{
-            background: `linear-gradient(90deg, rgb(${FARBE.inkRgb} / 0.6), transparent 60%)`,
+            background: `linear-gradient(270deg, rgb(${FARBE.inkRgb} / 0.6), transparent 60%)`,
           }}
         />
       )}

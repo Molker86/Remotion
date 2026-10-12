@@ -6,7 +6,7 @@ kommerziell, verändern erlaubt, Namensnennung nicht nötig (hier trotzdem).
 
 | Datei | Pexels | Urheber | Ausschnitt |
 | --- | --- | --- | --- |
-| `rad.mp4` | [5789979 „Cycling Closeup"](https://www.pexels.com/video/cycling-closeup-5789979/) | Pavel Danilyuk | ab 1,0 s, 8 s |
+| `rad.mp4` | [31000125](https://www.pexels.com/video/31000125/) (Zeitfahren, 9th National Road Cycling Championship, Drohne, 4K) | Pexels-Nutzer, siehe Seite | 8,9 s bis 11,65 s, verfolgt, 0,4-fach |
 | `lauf.mp4` | [12510396 „Front View of Competitors Running a Marathon"](https://www.pexels.com/video/front-view-of-competitors-running-a-marathon-12510396/) | Matthias Groeneveld | ab 15,0 s, 7 s |
 | `schwimmen.mp4` | [8685954 „Underwater Footage of Athletes Swimming in a Pool"](https://www.pexels.com/video/underwater-footage-of-athletes-swimming-in-a-pool-8685954/) | Kindel Media | ab 0,0 s, 7 s |
 

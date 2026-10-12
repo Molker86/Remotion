@@ -62,11 +62,12 @@ export const TriCoachRennen: React.FC<Props> = ({ format }) => {
           <Szene
             format={format}
             datei="footage/rad.mp4"
-            trimBefore={1 * fps}
+            trimBefore={24}
             playbackRate={1}
-            fokus={{ hoch: "30% 50%", band: "50% 50%" }}
+            fokus={{ hoch: "19% 50%", band: "50% 50%" }}
             index={1}
             werte={RAD}
+            zoom={{ von: 1, bis: 1.4, ursprung: { hoch: "50% 52%", band: "33% 52%" } }}
             versatz={24}
           />
         </TransitionSeries.Sequence>
@@ -104,16 +105,17 @@ export const TriCoachRennen: React.FC<Props> = ({ format }) => {
           presentation={diagonal()}
           timing={linearTiming({ durationInFrames: 24 })}
         />
-        {/* Gleiche Datei, Rate und Fokus wie „Rad" — nur 24 Frames früher. */}
+        {/* Gleiche Datei, Fokus und Kamerafahrt wie „Rad" — nur 24 Frames früher. */}
         <TransitionSeries.Sequence name="Rad (Anschluss)" durationInFrames={24} premountFor={fps}>
           <Szene
             format={format}
             datei="footage/rad.mp4"
-            trimBefore={1 * fps - 24 * 1}
+            trimBefore={0}
             playbackRate={1}
-            fokus={{ hoch: "30% 50%", band: "50% 50%" }}
+            fokus={{ hoch: "19% 50%", band: "50% 50%" }}
             index={1}
             werte={RAD}
+            zoom={{ von: 1, bis: 1.4, ursprung: { hoch: "50% 52%", band: "33% 52%" } }}
           />
         </TransitionSeries.Sequence>
       </TransitionSeries>
