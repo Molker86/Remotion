@@ -8,12 +8,11 @@
 # Lauf und Schwimmen landen als public/footage/<name>.mp4: 1920×1080, ohne
 # Ton, in ihrer eigenen Bildrate und ab dem gewählten Einstieg.
 #
-# Das Rad ist aufwendiger: ein Zeitfahren aus der Drohne in 4K. Die Fahrerin
-# wird verfolgt (scripts/rad-verfolgen.py, braucht numpy), eng um sie herum
-# ausgeschnitten und auf 0,4-fache Geschwindigkeit gedehnt — mit errechneten
-# Zwischenbildern, sonst stünde jedes Bild zweieinhalbmal und es ruckelte.
-# Die Datei beginnt mit „Rad (Anschluss)", also 24 Frames vor „Rad".
-# Das dauert einige Minuten.
+# Das Rad ist ein Schnitt aus zwei Einstellungen wie bei einer Übertragung:
+# erst ein Pulk, der an einer Kamera auf dem Asphalt vorbeirauscht (2,4 s),
+# dann das Profifeld in einer Stadtkurve (4,5 s). Beide in Echtzeit — die
+# Datei beginnt mit „Rad (Anschluss)", also 24 Frames vor „Rad", und der
+# Schnitt liegt nach 72 Frames.
 #
 # Aufruf: scripts/footage-laden.sh   (braucht www.pexels.com und
 # videos.pexels.com im Netz, dazu ffmpeg)
@@ -51,13 +50,16 @@ for zeile in "${CLIPS[@]}"; do
   echo "  → public/footage/$name.mp4"
 done
 
-# rad: Pexels 31000125, Zeitfahren bei der 9. National Road Cycling
-# Championship (UCI). Quellzeit 8,9 s bis 11,65 s, danach fällt die Drohne zurück.
-quelle="$roh/31000125-4k.mp4"
-lade 31000125 "" "$quelle"
-ausschnitt=$(python3 scripts/rad-verfolgen.py "$quelle" 8.9 2.75)
-ffmpeg -hide_banner -loglevel error -y -ss 8.9 -t 2.75 -i "$quelle" -an \
-  -vf "$ausschnitt,scale=1920:1080:flags=lanczos,minterpolate=fps=75:mi_mode=mci:mc_mode=aobmc:me_mode=bidir:vsbmc=1,setpts=2.5*PTS,fps=30" \
-  -c:v libx264 -crf 16 -preset slow -pix_fmt yuv420p -movflags +faststart \
+# rad: Pexels 31000104 (Straßenmeisterschaft, Kamera am Boden, 4K) ab 2,6 s
+# für 72 Frames, dann Pexels 2066560 („Road Bicycle Racing", Profifeld in der
+# Kurve, 1080p) ab 12,6 s für 134 Frames. Danach kommen dort Teamautos.
+boden="$roh/31000104-4k.mp4"
+kurve="$roh/2066560.mp4"
+lade 31000104 "" "$boden"
+lade 2066560 "" "$kurve"
+ffmpeg -hide_banner -loglevel error -y \
+  -ss 2.6 -t 2.4 -i "$boden" -ss 12.6 -t 4.5 -i "$kurve" -an \
+  -filter_complex "[0:v]scale=1920:1080:flags=lanczos,fps=30,setsar=1,trim=end_frame=72,setpts=PTS-STARTPTS[a];[1:v]scale=1920:1080,fps=30,setsar=1,trim=end_frame=134,setpts=PTS-STARTPTS[b];[a][b]concat=n=2:v=1[v]" \
+  -map "[v]" -c:v libx264 -crf 16 -preset slow -pix_fmt yuv420p -movflags +faststart \
   public/footage/rad.mp4
 echo "  → public/footage/rad.mp4"

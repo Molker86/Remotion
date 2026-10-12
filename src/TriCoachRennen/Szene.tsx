@@ -16,8 +16,9 @@ type Props = {
   readonly werte: Rennwerte;
   /**
    * Kamerafahrt über die ganze Szene. Ohne Angabe ein langsames Herausfahren
-   * aus der Mitte; das Rad fährt stattdessen auf die Athletin zu, damit sie
-   * nicht kleiner wird, während die Drohne zurückfällt.
+   * aus der Mitte; das Rad fährt stattdessen leicht auf das Feld zu, weil
+   * dort ein Schnitt mitten in der Szene liegt und ein Herausfahren ihn
+   * betonen würde.
    */
   readonly zoom?: {
     readonly von: number;
