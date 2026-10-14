@@ -9,3 +9,6 @@ out
 # Rohmaterial von Pexels (scripts/footage-laden.sh), groß und jederzeit neu ladbar.
 .footage-roh
 public/footage/*.mp4
+
+# Python-Zwischenstände der Werkstatt
+__pycache__

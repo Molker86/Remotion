@@ -1,0 +1,32 @@
+[0;93m2026-10-14 14:32:54.193566945 [W:onnxruntime:, graph.cc:5777 CleanUnusedInitializersAndNodeArgs] Removing initializer '1701'. It is not used by any node and should be removed from the model.[m
+[0;93m2026-10-14 14:32:54.193961725 [W:onnxruntime:, graph.cc:5777 CleanUnusedInitializersAndNodeArgs] Removing initializer '1706'. It is not used by any node and should be removed from the model.[m
+[0;93m2026-10-14 14:32:54.193980165 [W:onnxruntime:, graph.cc:5777 CleanUnusedInitializersAndNodeArgs] Removing initializer '1709'. It is not used by any node and should be removed from the model.[m
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1791988376.075306    2103 task_runner.cc:85] GPU suport is not available: INTERNAL: ; RET_CHECK failure (mediapipe/gpu/gl_context_egl.cc:77) display != EGL_NO_DISPLAYeglGetDisplay() returned error 0x300c
+INFO: Created TensorFlow Lite XNNPACK delegate for CPU.
+W0000 00:00:1791988376.193277    2132 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1791988376.934596    2132 inference_feedback_manager.cc:114] Feedback manager requires a model with a single signature inference. Disabling support for feedback tensors.
+W0000 00:00:1791988378.269700    2132 landmark_projection_calculator.cc:186] Using NORM_RECT without IMAGE_DIMENSIONS is only supported for the square ROI. Provide IMAGE_DIMENSIONS or use PROJECTION_MATRIX.
+load /root/.cache/rtmlib/hub/checkpoints/yolox_m_8xb8-300e_humanart-c2c7a14a.onnx with onnxruntime backend
+load /root/.cache/rtmlib/hub/checkpoints/rtmw-dw-x-l_simcc-cocktail14_270e-256x192_20231122.onnx with onnxruntime backend
+Schätzer   TTA   Kategorie           n fehlt  PCK@.1  PCK@.2 PCK.1sicht   OKS  OKS>.75 L/R-Tausch
+mediapipe  TTA   liegend            46     0    0.89    0.94       0.90  0.77     0.70          5
+mediapipe  TTA   stehend            56     0    0.77    0.88       0.78  0.63     0.52         23
+mediapipe  TTA   stuetz/sitz/knie   22     1    0.89    0.94       0.89  0.77     0.67          1
+mediapipe  TTA   vierfuessler       22     0    0.84    0.90       0.88  0.75     0.82          2
+mediapipe  ohne  liegend            46     0    0.88    0.94       0.89  0.76     0.70          5
+mediapipe  ohne  stehend            56     0    0.76    0.88       0.77  0.63     0.54         22
+mediapipe  ohne  stuetz/sitz/knie   22     1    0.87    0.93       0.87  0.75     0.67          2
+mediapipe  ohne  vierfuessler       22     1    0.84    0.90       0.87  0.76     0.81          1
+rtmw       TTA   liegend            46     0    0.92    0.97       0.95  0.81     0.80          0
+rtmw       TTA   stehend            56     0    0.82    0.90       0.83  0.71     0.61         17
+rtmw       TTA   stuetz/sitz/knie   22     0    0.96    0.99       0.98  0.87     0.95          0
+rtmw       TTA   vierfuessler       22     0    0.90    0.97       0.96  0.75     0.45          0
+rtmw       ohne  liegend            46     0    0.90    0.96       0.92  0.77     0.78          1
+rtmw       ohne  stehend            56     0    0.94    0.98       0.95  0.84     0.86          5
+rtmw       ohne  stuetz/sitz/knie   22     0    0.98    1.00       0.99  0.88     1.00          0
+rtmw       ohne  vierfuessler       22     0    0.90    0.97       0.96  0.76     0.45          0
+Zeit ('rtmw', False) 0.29s/Bild
+Zeit ('rtmw', True) 0.77s/Bild
+Zeit ('mediapipe', False) 0.13s/Bild
+Zeit ('mediapipe', True) 0.18s/Bild

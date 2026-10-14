@@ -60,3 +60,12 @@ npx remotion render TriCoachRennen out/rennen-hoch-master.mp4 --scale=0.8 --crf=
 npx remotion render TriCoachRennenBand out/rennen-band-master.mp4 --crf=12 --muted   # volle Größe: --scale=2/3 ergibt 720,00004 und bricht ab
 scripts/ausliefern.sh ../Tri-Coach/frontend/src/auth/rennen   # MP4, WebM (AV1) und Standbild je Format
 ```
+
+## Werkstatt für Übungsvideos (in Arbeit)
+
+Fotorealistische Übungsvideos für Tri-Coach: Eine Video-KI überträgt die
+gelösten Posen der Tri-Coach-Bibliothek auf eine fiktive Trainerin. Stand,
+Entscheidungen, nächste Schritte und Prototypen stehen in
+[`werkstatt/UEBERGABE.md`](werkstatt/UEBERGABE.md) — dort zuerst lesen.
+`werkstatt/` erwartet `../Tri-Coach` als Nachbar-Checkout und ist vom Lint
+ausgenommen.

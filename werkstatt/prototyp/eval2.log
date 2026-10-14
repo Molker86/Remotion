@@ -1,0 +1,10 @@
+[0;93m2026-10-14 14:37:24.240793442 [W:onnxruntime:, graph.cc:5777 CleanUnusedInitializersAndNodeArgs] Removing initializer '1701'. It is not used by any node and should be removed from the model.[m
+[0;93m2026-10-14 14:37:24.241110536 [W:onnxruntime:, graph.cc:5777 CleanUnusedInitializersAndNodeArgs] Removing initializer '1706'. It is not used by any node and should be removed from the model.[m
+[0;93m2026-10-14 14:37:24.241132429 [W:onnxruntime:, graph.cc:5777 CleanUnusedInitializersAndNodeArgs] Removing initializer '1709'. It is not used by any node and should be removed from the model.[m
+load /root/.cache/rtmlib/hub/checkpoints/yolox_m_8xb8-300e_humanart-c2c7a14a.onnx with onnxruntime backend
+load /root/.cache/rtmlib/hub/checkpoints/rtmw-dw-x-l_simcc-cocktail14_270e-256x192_20231122.onnx with onnxruntime backend
+richtig       n=146  OKS(Körper) Median 0.89  10%-Quantil 0.68  90%-Quantil 0.97  Anteil >0.75: 0.87  >0.6: 0.94
+anderes_bild  n=212  OKS(Körper) Median 0.52  10%-Quantil 0.29  90%-Quantil 0.73  Anteil >0.75: 0.09  >0.6: 0.34
+gespiegelt    n= 92  OKS(Körper) Median 0.44  10%-Quantil 0.13  90%-Quantil 0.67  Anteil >0.75: 0.07  >0.6: 0.28
+Mittlerer Fehler je Gelenk (Anteil der Personengröße), richtige Pose:
+  schulter_l 0.042, schulter_r 0.062, ellbogen_l 0.035, ellbogen_r 0.080, hand_l 0.041, hand_r 0.082, huefte_l 0.031, huefte_r 0.033, knie_l 0.022, knie_r 0.036, knoechel_l 0.034, knoechel_r 0.037
